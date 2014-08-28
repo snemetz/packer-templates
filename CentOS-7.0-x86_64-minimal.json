@@ -1,0 +1,69 @@
+{
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "headless": true,
+      "disk_size": 40960,
+      "guest_os_type": "RedHat_64",
+      "iso_url": "http://bnjopsnfs01/repos/bn-isos/CentOS-7.0-1406-x86_64-Minimal.iso",
+      "iso_checksum": "e3afe3f1121d69c40cc23f0bafa05e5d",
+      "iso_checksum_type": "md5",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "virtualbox_version_file": ".vbox_version",
+      "vboxmanage": [
+        [ "modifyvm", "{{.Name}}", "--memory", "512" ],
+        [ "modifyvm", "{{.Name}}", "--cpus", "1" ]
+      ],
+      "http_directory": "CentOS-7.0-x86_64/builders/",
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+      ],
+      "shutdown_command": "echo 'vagrant'|sudo -S /sbin/halt -h -p"
+    },
+    {
+      "type": "vmware-iso",
+      "headless": true,
+      "disk_size": 40960,
+      "guest_os_type": "centos-64",
+      "iso_url": "http://bnjopsnfs01/repos/bn-isos/CentOS-7.0-1406-x86_64-Minimal.iso",
+      "iso_checksum": "e3afe3f1121d69c40cc23f0bafa05e5d",
+      "iso_checksum_type": "md5",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "tools_upload_flavor": "linux",
+      "vmx_data": {
+        "memsize": "512",
+        "numvcpus": "1",
+        "vhv.enable": "TRUE"
+      },
+      "http_directory": "CentOS-7.0-x86_64/builders/",
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+      ],
+      "shutdown_command": "echo 'vagrant'|sudo -S /sbin/halt -h -p"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant'|sudo -S sh '{{.Path}}'",
+      "scripts": [
+        "CentOS-7.0-x86_64/provisioners/base.sh",
+        "CentOS-7.0-x86_64/provisioners/puppet.sh",
+        "CentOS-7.0-x86_64/provisioners/vagrant.sh",
+        "CentOS-7.0-x86_64/provisioners/vmtools.sh",
+        "CentOS-7.0-x86_64/provisioners/cleanup.sh"
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "vagrant",
+      "output": "/home/snemetz/VMs/vagrant-boxes/CentOS-7.0-x86_64-Minimal-{{.Provider}}.box"
+    }
+  ]
+}
