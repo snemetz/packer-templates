@@ -18,7 +18,7 @@
         [ "modifyvm", "{{.Name}}", "--memory", "512" ],
         [ "modifyvm", "{{.Name}}", "--cpus", "1" ]
       ],
-      "http_directory": "CentOS-6.5-x86_64-minimal/builders/",
+      "http_directory": "CentOS-6.5-x86_64/builders/",
       "boot_command": [
         "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
       ],
@@ -40,7 +40,7 @@
         "numvcpus": "1",
         "vhv.enable": "TRUE"
       },
-      "http_directory": "CentOS-6.5-x86_64-minimal/builders/",
+      "http_directory": "CentOS-6.5-x86_64/builders/",
       "boot_command": [
         "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
       ],
@@ -52,11 +52,11 @@
       "type": "shell",
       "execute_command": "echo 'vagrant'|sudo -S sh '{{.Path}}'",
       "scripts": [
-        "CentOS-6.5-x86_64-minimal/provisioners/base.sh",
-        "CentOS-6.5-x86_64-minimal/provisioners/puppet.sh",
-        "CentOS-6.5-x86_64-minimal/provisioners/vagrant.sh",
-        "CentOS-6.5-x86_64-minimal/provisioners/vmtools.sh",
-        "CentOS-6.5-x86_64-minimal/provisioners/cleanup.sh"
+        "CentOS-6.5-x86_64/provisioners/base.sh",
+        "CentOS-6.5-x86_64/provisioners/puppet.sh",
+        "CentOS-6.5-x86_64/provisioners/vagrant.sh",
+        "CentOS-6.5-x86_64/provisioners/vmtools.sh",
+        "CentOS-6.5-x86_64/provisioners/cleanup.sh"
       ]
     }
   ],
