@@ -1,0 +1,25 @@
+{
+  "box_os":         "CentOS",
+  "box_ostype":     "centos",
+  "box_osversion":  "6.5",
+  "box_nick":       "6.5",
+  "box_arch":       "x64",
+  "box_type":       "base",
+  "box_disk":       "40960",
+  "box_memory":     "512",
+  "box_cpus":       "1",
+
+  "iso_src":        "http://bnjopsnfs01",
+  "iso_url":        "/repos/bn-isos",
+  "iso_arch":       "x86_64",
+  "iso_type":       "minimal",
+  "iso_md5":        "0d9dc37b5dd4befa1c440d2174e88a87",
+
+  "ssh_user":       "vagrant",
+  "ssh_pass":       "vagrant",
+
+  "hostname":       "vagrant-centos-6.5",
+  "domain":         "vagrantup.com",
+
+  "output_path":    "/home/snemetz/VMs/vagrant-boxes"
+}
