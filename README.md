@@ -14,6 +14,7 @@ This is a set of templates to create base OS images for various uses
 
 ## Required Software
 - [Packer](http://www.packer.io/downloads.html) (obviously)
+- [qemu] Ubuntu: apt-get install qemu-system
 - [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 - [Vagrant](http://www.vagrantup.com/downloads.html)
 - [VMware Player](https://my.vmware.com/web/vmware/free#desktop_end_user_computing/vmware_player/6_0), Workstation, Fusion, or vSphere. 
