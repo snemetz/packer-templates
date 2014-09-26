@@ -1,0 +1,93 @@
+{
+  "description": "Builders for CentOS 6.x",
+  "min_packer_version": "0.6.1",
+  "variables": {
+    "box_os":        "",
+    "box_ostype":    "",
+    "box_osversion": "",
+    "box_nick":      "",
+    "box_arch":      "",
+    "box_type":      "",
+    "box_disk":      "",
+    "box_memory":    "",
+    "box_cpus":      "",
+
+    "iso_src":       "",
+    "iso_url":       "",
+    "iso_arch":      "",
+    "iso_type":      "",
+    "iso_md5":       "",
+
+    "ssh_user":      "",
+    "ssh_pass":      "",
+
+    "hostname":      "",
+    "domain":        "",
+
+    "qemu_accel":    "QEMU Accelerator type: kvm or xen",
+    "qemu_accel":    "kvm",
+
+    "output_path":   "output-images"
+  },
+  "builders": [
+    {
+      "type": "docker",
+      "image": "centos:centos6",
+      "export_path": "output-docker/docker-centos6-wordpress.tar"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+                  "yum -y update; yum clean all",
+                  "yum -y install epel-release; yum clean all",
+                  "yum -y install httpd php php-mysql php-gd pwgen supervisor bash-completion openssh-server psmisc tar; yum clean all"
+                ]
+    },
+    {
+      "type": "file",
+      "source": "CentOS-6.5-x86_64/files/wordpress/start.sh",
+      "destination": "/start.sh"
+    },
+    {
+      "type": "file",
+      "source": "CentOS-6.5-x86_64/files/wordpress/foreground.sh",
+      "destination": "/etc/httpd/foreground.sh"
+    },
+    {
+      "type": "file",
+      "source": "CentOS-6.5-x86_64/files/wordpress/supervisord.conf",
+      "destination": "/etc/supervisord.conf"
+    },
+    {
+      "type": "file",
+      "source": "CentOS-6.5-x86_64/files/wordpress/latest.tar.gz",
+      "destination": "/wordpress.tar.gz"
+    },
+    {
+      "type": "shell",
+      "inline": [
+                  "echo %sudo ALL=NOPASSWD: ALL >> /etc/sudoers",
+                  "tar xvzf /wordpress.tar.gz",
+                  "mv /wordpress/* /var/www/html/.",
+                  "chown -R apache:apache /var/www/",
+                  "chmod 755 /start.sh",
+                  "chmod 755 /etc/httpd/foreground.sh",
+                  "mkdir /var/run/sshd"
+                ]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "docker-import",
+      "repository": "centos6-wordpress",
+      "tag": "0.1",
+      "dockerfile_lines": [
+        "EXPOSE 80",
+        "EXPOSE 22",
+        "CMD ['/bin/bash', '/start.sh']"
+      ]
+    }
+  ]
+}
