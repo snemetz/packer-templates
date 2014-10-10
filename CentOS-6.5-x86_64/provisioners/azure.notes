@@ -1,0 +1,98 @@
+# Notes on setting up image for Azure
+# http://azure.microsoft.com/en-us/documentation/articles/virtual-machines-linux-create-upload-vhd/
+
+# remove: NetworkManager - Not in minimal install
+# Remove udev rule for ethernet - 70 & 75-persistent-net
+mkdir -m 0700 /var/lib/waagent
+mv /lib/udev/rules.d/75-persistent-net-generator.rules /var/lib/waagent/
+mv /etc/udev/rules.d/70-persistent-net.rules /var/lib/waagent/
+
+yum -y install python-pyasn1
+
+# Setup Azure CentOS repos
+cat <<REPOS > /etc/yum.repos.d/CentOS-Base.repo
+[openlogic]
+name=CentOS-$releasever - openlogic packages for $basearch
+baseurl=http://olcentgbl.trafficmanager.net/openlogic/$releasever/openlogic/$basearch/
+enabled=1
+gpgcheck=0
+
+[base]
+name=CentOS-$releasever - Base
+baseurl=http://olcentgbl.trafficmanager.net/centos/$releasever/os/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
+
+#released updates
+[updates]
+name=CentOS-$releasever - Updates
+baseurl=http://olcentgbl.trafficmanager.net/centos/$releasever/updates/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
+
+#additional packages that may be useful
+[extras]
+name=CentOS-$releasever - Extras
+baseurl=http://olcentgbl.trafficmanager.net/centos/$releasever/extras/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
+
+#additional packages that extend functionality of existing packages
+[centosplus]
+name=CentOS-$releasever - Plus
+baseurl=http://olcentgbl.trafficmanager.net/centos/$releasever/centosplus/$basearch/
+gpgcheck=1
+enabled=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
+
+#contrib - packages by Centos Users
+[contrib]
+name=CentOS-$releasever - Contrib
+baseurl=http://olcentgbl.trafficmanager.net/centos/$releasever/contrib/$basearch/
+gpgcheck=1
+enabled=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
+REPOS
+
+# Other repos there: SCL (some newer apps), cr (empty), fasttrack (updates before they hit updates), xen4 (kernel,libvirt,xen)
+
+# Setup yum
+echo 'http_caching=packages' >> /etc/yum.conf
+sed -i '/^enabled=/ s/1/0/' /etc/yum/pluginconf.d/fastestmirror.conf
+yum clean all
+
+# Edit grub
+# Edit /boot/grub/menu.lst default kernel line to include
+#    console=ttyS0 earlyprintk=ttyS0 rootdelay=300 numa=off
+# Test that there is only one kernel line
+sed -i '/kernel / s/$/ earlyprintk=ttyS0 rootdelay=300 numa=off/' /boot/grub/menu.lst
+
+# Edit Sudoers - Puppet should take care of this
+sed -i '/^Defaults targetpw/ d' /etc/sudoers
+
+# install Azure Linux Agent - In repo: http://olcentgbl.trafficmanager.net/openlogic/6/openlogic/x86_64/RPMS/
+yum -y install WALinuxAgent
+# Config Azure Linux Agent
+# DO NOT put swap on OS disk. Put on local resource disk, which is a temp disk
+/etc/waagent.conf - see what else is in file - replace or edit
+ResourceDisk.Format=y
+ResourceDisk.Filesystem=ext4
+ResourceDisk.MountPoint=/mnt/resource
+ResourceDisk.EnableSwap=y
+ResourceDisk.SwapSizeMB=2048    ## NOTE: set this to whatever you need it to be.
+
+# deprovision and prep for Azure
+waagent -force -deprovision
+export HISTSIZE=0
+
+
+
+
+
+# Add Hot-Add support - Azure support ??
+#echo 'SUBSYSTEM=="memory", ACTION=="add", ATTR{state}="online"' > /etc/udev/rules.d/100-balloon.rules
+
+# Hyper-V Backup Essential for Linux ??
+# key/value pair infrastructure support ??
+#    yum install hypervkvpd
+

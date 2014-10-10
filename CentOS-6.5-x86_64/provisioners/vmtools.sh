@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Hyper-V & Azure setup. Not a builder. Pass user var
+
 case "$PACKER_BUILDER_TYPE" in
   virtualbox-iso|virtualbox-ovf)
     # Install Virtualbox guest additions
