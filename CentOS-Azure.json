@@ -1,0 +1,100 @@
+{
+  "description": "Builders for CentOS 6.x",
+  "min_packer_version": "0.6.1",
+  "variables": {
+    "box_os":        "",
+    "box_ostype":    "",
+    "box_osversion": "",
+    "box_nick":      "",
+    "box_arch":      "",
+    "box_type":      "",
+    "box_disk":      "",
+    "box_memory":    "",
+    "box_cpus":      "",
+
+    "iso_src":       "",
+    "iso_url":       "",
+    "iso_arch":      "",
+    "iso_type":      "",
+    "iso_md5":       "",
+
+    "ssh_user":      "",
+    "ssh_pass":      "",
+
+    "hostname":      "",
+    "domain":        "",
+
+    "output_path":   "",
+    "cloud_type":    "azure"
+  },
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "headless": true,
+      "disk_size": "{{ user `box_disk` }}",
+      "guest_os_type": "RedHat_64",
+      "iso_url": "{{ user `iso_src` }}{{ user `iso_url` }}/{{ user `box_os` }}-{{ user `box_osversion` }}-{{ user `iso_arch` }}-{{ user `iso_type` }}.iso",
+      "iso_checksum": "{{ user `iso_md5` }}",
+      "iso_checksum_type": "md5",
+      "ssh_username": "{{ user `ssh_user` }}",
+      "ssh_password": "{{ user `ssh_pass` }}",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "virtualbox_version_file": ".vbox_version",
+      "vboxmanage": [
+        [ "modifyvm", "{{.Name}}", "--memory", "{{ user `box_memory` }}" ],
+        [ "modifyvm", "{{.Name}}", "--cpus", "{{ user `box_cpus` }}" ]
+      ],
+      "http_directory": "{{ user `box_os` }}-{{ user `box_osversion` }}-{{ user `iso_arch` }}/builders/",
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+      ],
+      "shutdown_command": "echo {{ user `ssh_pass` }}|sudo -S /sbin/halt -h -p"
+    },
+    {
+      "type": "vmware-iso",
+      "headless": true,
+      "disk_size": "{{ user `box_disk` }}",
+      "guest_os_type": "centos-64",
+      "iso_url": "{{ user `iso_src` }}{{ user `iso_url` }}/{{ user `box_os` }}-{{ user `box_osversion` }}-{{ user `iso_arch` }}-{{ user `iso_type` }}.iso",
+      "iso_checksum": "{{ user `iso_md5` }}",
+      "iso_checksum_type": "md5",
+      "ssh_username": "{{ user `ssh_user` }}",
+      "ssh_password": "{{ user `ssh_pass` }}",
+      "tools_upload_flavor": "linux",
+      "vmx_data": {
+        "memsize": "{{ user `box_memory` }}",
+        "numvcpus": "{{ user `box_cpus` }}",
+        "vhv.enable": "TRUE"
+      },
+      "http_directory": "{{ user `box_os` }}-{{ user `box_osversion` }}-{{ user `iso_arch` }}/builders/",
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+      ],
+      "shutdown_command": "echo {{ user `ssh_pass` }}|sudo -S /sbin/halt -h -p"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "environment_vars": [
+        "CLOUD_TYPE={{ user `cloud_type` }}"
+      ],
+      "execute_command": "echo 'vagrant'| {{ .Vars }} sudo -E -S sh '{{.Path}}'",
+      "scripts": [
+        "{{ user `box_os` }}-{{ user `box_osversion` }}-{{ user `iso_arch` }}/provisioners/base.sh",
+        "{{ user `box_os` }}-{{ user `box_osversion` }}-{{ user `iso_arch` }}/provisioners/puppet.sh",
+        "{{ user `box_os` }}-{{ user `box_osversion` }}-{{ user `iso_arch` }}/provisioners/vagrant.sh",
+        "{{ user `box_os` }}-{{ user `box_osversion` }}-{{ user `iso_arch` }}/provisioners/vmtools.sh",
+        "{{ user `box_os` }}-{{ user `box_osversion` }}-{{ user `iso_arch` }}/provisioners/cleanup.sh"
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "vagrant",
+      "output": "{{ user `output_path` }}/{{ user `box_os` }}-{{ user `box_osversion` }}-{{ user `box_arch` }}-{{ user `iso_type` }}-{{.Provider}}-{{isotime}}.box"
+    }
+  ]
+}

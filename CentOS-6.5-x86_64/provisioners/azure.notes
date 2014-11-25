@@ -74,15 +74,24 @@ sed -i '/^Defaults targetpw/ d' /etc/sudoers
 yum -y install WALinuxAgent
 # Config Azure Linux Agent
 # DO NOT put swap on OS disk. Put on local resource disk, which is a temp disk
-/etc/waagent.conf - see what else is in file - replace or edit
+/etc/waagent.conf - see what else is in file - edit
+# Defaults
 ResourceDisk.Format=y
 ResourceDisk.Filesystem=ext4
 ResourceDisk.MountPoint=/mnt/resource
+# NOT Defaults
 ResourceDisk.EnableSwap=y
 ResourceDisk.SwapSizeMB=2048    ## NOTE: set this to whatever you need it to be.
 
 # deprovision and prep for Azure
 waagent -force -deprovision
+# This does:
+# WARNING! The waagent service will be stopped.
+# WARNING! All SSH host key pairs will be deleted.
+# WARNING! Cached DHCP leases will be deleted.
+# WARNING! Nameserver configuration in /etc/resolv.conf will be deleted.
+# WARNING! root password will be disabled. You will not be able to login as root.
+#
 export HISTSIZE=0
 
 

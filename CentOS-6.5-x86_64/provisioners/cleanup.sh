@@ -5,11 +5,13 @@
 # if [ -f /etc/gentoo-release ] ; then
 # if [ -f /etc/redhat-release ] ; then
 
-# These were only needed for building VMware/Virtualbox extensions:
-yum -y remove gcc cpp kernel-devel kernel-headers perl
-yum -y clean all
-rm -rf VBoxGuestAdditions_*.iso VBoxGuestAdditions_*.iso.?
-rm -rf /tmp/rubygems-*
+case "$PACKER_BUILDER_TYPE" in
+  virtualbox-iso|virtualbox-ovf)
+    yum -y remove gcc cpp kernel-devel kernel-headers perl
+    rm -rf VBoxGuestAdditions_*.iso VBoxGuestAdditions_*.iso.?
+    rm -rf /tmp/rubygems-*
+  ;;
+esac
 
 # clean up redhat interface persistence
 rm -f /etc/udev/rules.d/70-persistent-net.rules
@@ -21,9 +23,14 @@ if [ -r /etc/sysconfig/network-scripts/ifcfg-eth0 ]; then
   sed -i 's/^UUID.*$//' /etc/sysconfig/network-scripts/ifcfg-eth0
 fi
 
-
-### OS Independent stuff
-
 # Remove log files from the VM
 #find /var/log -type f -exec rm -f {} \;
+
+yum -y clean all
+case "$CLOUD_TYPE" in
+	azure)
+		waagent -force -deprovision
+	;;
+esac
+export HISTSIZE=0
 
