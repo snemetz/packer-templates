@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Packer-templates : Packer base OS templates">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Packer-templates</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/snemetz/packer-templates">View on GitHub</a>
+
+          <h1 id="project_title">Packer-templates</h1>
+          <h2 id="project_tagline">Packer base OS templates</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/snemetz/packer-templates/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/snemetz/packer-templates/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="packer-templates" class="anchor" href="#packer-templates" aria-hidden="true"><span class="octicon octicon-link"></span></a>Packer Templates</h1>
+
+<p>This is a set of templates to create base OS images for various uses</p>
+
+<h2>
+<a id="table-of-contents" class="anchor" href="#table-of-contents" aria-hidden="true"><span class="octicon octicon-link"></span></a>Table of Contents</h2>
+
+<ul>
+<li><a href="#required-software">Required Software</a></li>
+<li><a href="#running-packer">Running Packer</a></li>
+<li><a href="#builders">Builders</a></li>
+<li><a href="#post-processors">Post Processors</a></li>
+<li><a href="#supported-packer-versions">Supported Packer Versions</a></li>
+</ul>
+
+<h2>
+<a id="required-software" class="anchor" href="#required-software" aria-hidden="true"><span class="octicon octicon-link"></span></a>Required Software</h2>
+
+<ul>
+<li>
+<a href="http://www.packer.io/downloads.html">Packer</a> (obviously)</li>
+<li>[qemu] Ubuntu: apt-get install qemu-system</li>
+<li><a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a></li>
+<li><a href="http://www.vagrantup.com/downloads.html">Vagrant</a></li>
+<li>
+<a href="https://my.vmware.com/web/vmware/free#desktop_end_user_computing/vmware_player/6_0">VMware Player</a>, Workstation, Fusion, or vSphere. 
+For VMware Player you need the Player and VIX</li>
+</ul>
+
+<p>Ubuntu VMware Player Install</p>
+
+<pre><code>apt-get install build-essential linux-headers-`uname -r`
+apt-get install qemu
+gksudo bash VMware-Player-6.0.3-1895310.x86_64.bundle
+gksudo bash VMware-VIX-1.13.3-1895310.x86_64.bundle
+</code></pre>
+
+<h2>
+<a id="running-packer" class="anchor" href="#running-packer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Running Packer</h2>
+
+<p>If you want to build only virtualbox or vmware</p>
+
+<pre><code>packer build --only=virtualbox-iso template.json
+packer build --only=vmware-iso template.json
+</code></pre>
+
+<h2>
+<a id="builders" class="anchor" href="#builders" aria-hidden="true"><span class="octicon octicon-link"></span></a>Builders</h2>
+
+<ul>
+<li><a href="http://www.packer.io/docs/builders/virtualbox-iso.html">virtualbox-iso</a></li>
+<li><a href="http://www.packer.io/docs/builders/vmware-iso.html">vmware-iso</a></li>
+</ul>
+
+<p>Not supported by vagrant and not implemented yet:
+docker
+openstack
+qemu - xen</p>
+
+<h2>
+<a id="post-processors" class="anchor" href="#post-processors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Post Processors</h2>
+
+<ul>
+<li><a href="http://www.packer.io/docs/post-processors/vagrant.html">vagrant</a></li>
+</ul>
+
+<h2>
+<a id="supported-packer-versions" class="anchor" href="#supported-packer-versions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported Packer Versions</h2>
+
+<p>Templates tested with packer 0.6.1</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Packer-templates maintained by <a href="https://github.com/snemetz">snemetz</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
