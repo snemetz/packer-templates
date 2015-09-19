@@ -50,3 +50,7 @@ qemu - xen
 ## Supported Packer Versions
 Templates tested with packer 0.6.1
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/snemetz/packer-templates/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
