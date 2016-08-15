@@ -19,6 +19,7 @@ This is a set of templates to create base OS images for various uses
 - [Vagrant](http://www.vagrantup.com/downloads.html)
 - [VMware Player](https://my.vmware.com/web/vmware/free#desktop_end_user_computing/vmware_player/6_0), Workstation Player, Fusion, or vSphere. 
 For VMware Player you need the Player and VIX
+- [VMware OVF Tool] (https://www.vmware.com/support/developer/ovf/) Optional, depending on needs
 
 CentOS VMware Workstation Player - Still testing if anything else is needed
 ```
