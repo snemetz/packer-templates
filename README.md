@@ -19,6 +19,7 @@ This is a set of templates to create base OS images for various uses
 - [Vagrant](http://www.vagrantup.com/downloads.html)
 - [VMware Player](https://my.vmware.com/web/vmware/free#desktop_end_user_computing/vmware_player/6_0), Workstation Player, Fusion, or vSphere. 
 For VMware Player you need the Player and VIX
+- [VMware Tools ISO](https://github.com/rasa/vmware-tools-patches) Needed on CentOS 7 and probably others.
 
 ## Optional Software
 - [VMware OVF Tool](https://www.vmware.com/support/developer/ovf/)
@@ -34,6 +35,8 @@ chmod u+x VMware-*.bundle
 ./VMware-Player-12.1.1-3770994.x86_64.bundle --console --eulas-agreed
 ./VMware-VIX-1.15.3-3770994.x86_64.bundle --console --eulas-agreed
 ./VMware-ovftool-4.1.0-2459827-lin.x86_64.bundle --console --eulas-agreed
+# Uncompress VMware tools
+#cp payload/linux.iso /usr/lib/vmware/isoimages/linux.iso
 ```
 
 Ubuntu VMware Player Install
