@@ -30,6 +30,7 @@ yum -y groupinstall "Development Tools"
 chmod u+x VMware-*.bundle
 ./VMware-Player-12.1.1-3770994.x86_64.bundle --console --eulas-agreed
 ./VMware-VIX-1.15.3-3770994.x86_64.bundle --console --eulas-agreed
+./VMware-ovftool-4.1.0-2459827-lin.x86_64.bundle --console --eulas-agreed
 ```
 
 Ubuntu VMware Player Install
