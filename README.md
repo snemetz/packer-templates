@@ -29,7 +29,7 @@ CentOS VMware Workstation Player - Still testing if anything else is needed
 ```
 yum clean all
 yum -y update
-yum -y install kernel-devel kernel-headers-`uname -r`
+yum -y install kernel-devel-`uname -r` kernel-headers-`uname -r`
 yum -y groupinstall "Development Tools"
 yum -y install qemu-img
 chmod u+x VMware-*.bundle
