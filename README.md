@@ -2,7 +2,7 @@
 Packer Templates
 ================
 
-This is a set of templates to create base OS images for various uses
+This is a set of templates to create base OS images for various uses.
 
 ## Table of Contents
 
